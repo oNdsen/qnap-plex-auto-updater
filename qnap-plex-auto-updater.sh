@@ -5,13 +5,43 @@ debug=$false
 
 # get current directory
 scriptDir=$(dirname "$0")
+# get system architecture
+architecture=$(uname -m)
 
-# get current downloaded plex server version
-currentVersion=$(cat "$scriptDir/current")
+# select build based on architecture
+case $architecture in
+  x86_64)
+    build="linux-x86_64"
+    ;;
+  aarch64)
+    build="linux-aarch64"
+    ;;
+  armv7l)
+    # check if system supports neon instructions
+    if cat /proc/cpuinfo | grep -q "neon"; then
+      build="linux-armv7neon"
+    else
+      build="linux-armv7hf"
+    fi
+    ;;
+  *)
+    echo "Unsupported architecture: $architecture"
+    exit 1
+    ;;
+esac
+
+# get current installed plex server version
+if [ -f "/share/PlexData/Plex Media Server/Logs/Plex Media Server.log" ]; then
+    currentVersion=$(grep -oP "Plex Media Server v\K[^\s]+" "/share/PlexData/Plex Media Server/Logs/Plex Media Server.log" | tail -1)
+    echo "Installed version: $currentVerion"
+else
+    echo "No log file found. Assuming latest version needs to be installed."
+    last=""
+fi
 if [[ $debug ]]
 then
 	echo "Installed: $currentVersion"
-fi
+fi 
 
 # get plex token from preferences and build url
 plex_token=$(cat "/share/PlexData/Plex Media Server/Preferences.xml" | grep -oE 'PlexOnlineToken="[^"]+"' | sed -E 's/PlexOnlineToken="([^"]+)"/\1/')
@@ -23,7 +53,7 @@ fi
 
 # get latest data from plex
 latestVersion=$(echo $(curl -s $plex_url) | jq ".nas.QNAP | .version" | tr -d '"')
-latestQPKG=$(echo $(curl -s $plex_url) | jq ".nas.QNAP.releases[] | select(.build==\"linux-x86_64\") | .url" | tr -d '"')
+latestQPKG=$(echo $(curl -s $plex_url) | jq ".nas.QNAP.releases[] | select(.build==\"$build\") | .url" | tr -d '"')
 if [[ $debug ]]
 then
 	echo "Latest Version: $latestVersion"

@@ -1,13 +1,9 @@
 # Description
-This is a guide to enable auto-updating Plex Media Server on QNAP servers
+This is a guide to enable auto-updating Plex Media Server on any QNAP servers
+It checks the host architecture for finding the needed build and compares the installed Version with the latest Version based on the Information of the Server Log file.
+JQ is needed to run the script
 
 # Instructions
-
-### Install `jq`
-1. Follow [instructions on how to add QnapClub repo](https://www.qnapclub.eu/en/howto/1) to your server.
-2. Locate `jq` in the QnapClub app store and install it
-
-<img width="800" alt="plex-qnapclub-jq" src="https://user-images.githubusercontent.com/627860/138809755-20c9e1d5-608b-4807-80ba-23e69492f018.png">
 
 ### Download and test the script
 1. Download the [`qnap-plex-auto-updater.sh`](/qnap-plex-auto-updater.sh) script onto your QNAP server. For this example, I've placed my script in `/share/homes/user/scripts/qnap-plex-auto-updater.sh`
