@@ -30,10 +30,9 @@ case $architecture in
     ;;
 esac
 
-# get current downloaded plex server version
-# currentVersion=$(cat "$scriptDir/current")
+# get current installed plex server version
 if [ -f "/share/PlexData/Plex Media Server/Logs/Plex Media Server.log" ]; then
-    currentVerion=$(grep -oP "Plex Media Server v\K[^\s]+" "/share/PlexData/Plex Media Server/Logs/Plex Media Server.log" | tail -1)
+    currentVersion=$(grep -oP "Plex Media Server v\K[^\s]+" "/share/PlexData/Plex Media Server/Logs/Plex Media Server.log" | tail -1)
     echo "Installed version: $currentVerion"
 else
     echo "No log file found. Assuming latest version needs to be installed."
