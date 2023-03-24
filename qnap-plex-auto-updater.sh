@@ -54,7 +54,7 @@ fi
 
 # get latest data from plex
 latestVersion=$(echo $(curl -s $plex_url) | jq ".nas.QNAP | .version" | tr -d '"')
-latestQPKG=$(echo $(curl -s $plex_url) | jq ".nas.QNAP.releases[] | select(.build==\"linux-armv7neon\") | .url" | tr -d '"')
+latestQPKG=$(echo $(curl -s $plex_url) | jq ".nas.QNAP.releases[] | select(.build==\"$build\") | .url" | tr -d '"')
 if [[ $debug ]]
 then
 	echo "Latest Version: $latestVersion"
